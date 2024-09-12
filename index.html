@@ -1,0 +1,271 @@
+<html><head><base href="https://stylish-code-generator.example.com/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Стильный TDI Генератор Кодов</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+  :root {
+    --primary-color: #4a90e2;
+    --secondary-color: #f39c12;
+    --background-color: #f5f7fa;
+    --text-color: #333;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    transition: all 0.3s ease;
+  }
+
+  .container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px var(--shadow-color);
+  }
+
+  h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px var(--shadow-color);
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--shadow-color);
+  }
+
+  #generateButton {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  #generateButton:hover {
+    background-color: #3a7bc8;
+  }
+
+  #clearButton {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+
+  #clearButton:hover {
+    background-color: #e67e22;
+  }
+
+  #copyButton {
+    background-color: #2ecc71;
+    color: white;
+    margin-top: 1rem;
+  }
+
+  #copyButton:hover {
+    background-color: #27ae60;
+  }
+
+  #output {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+  }
+
+  #output::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  #output::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  #output::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  #output::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>TDI Генератор Кодов</h1>
+    <div class="input-group">
+      <label for="baseCode">Базовый код:</label>
+      <input type="text" id="baseCode" placeholder="Например: TDI-0792500" required>
+    </div>
+    <div class="input-group">
+      <label for="count">Количество кодов:</label>
+      <input type="number" id="count" min="1" max="100" placeholder="Введите число от 1 до 100" required>
+    </div>
+    <div class="button-group">
+      <button id="generateButton" onclick="generateCodes()">Сгенерировать</button>
+      <button id="clearButton" onclick="clearOutput()">Очистить</button>
+    </div>
+    <div id="output"></div>
+    <button id="copyButton" onclick="copyToClipboard()" style="display: none;">Копировать</button>
+  </div>
+
+  <script>
+    function generateCodes() {
+      const baseCode = document.getElementById('baseCode').value;
+      const count = parseInt(document.getElementById('count').value);
+      const output = document.getElementById('output');
+      const copyButton = document.getElementById('copyButton');
+
+      if (!baseCode || isNaN(count) || count < 1 || count > 100) {
+        alert('Пожалуйста, введите правильный базовый код и количество (от 1 до 100).');
+        document.getElementById('baseCode').classList.add('shake');
+        document.getElementById('count').classList.add('shake');
+        setTimeout(() => {
+          document.getElementById('baseCode').classList.remove('shake');
+          document.getElementById('count').classList.remove('shake');
+        }, 500);
+        return;
+      }
+
+      const prefix = baseCode.split('-')[0];
+      let number = parseInt(baseCode.split('-')[1]);
+
+      let generatedCodes = '';
+      for (let i = 1; i <= count; i++) {
+        number++;
+        generatedCodes += `${prefix}-${number.toString().padStart(7, '0')}\n`;
+      }
+
+      output.textContent = generatedCodes.trim();
+      output.classList.add('fade-in');
+      copyButton.style.display = 'block';
+      copyButton.classList.add('fade-in');
+    }
+
+    function clearOutput() {
+      const output = document.getElementById('output');
+      const copyButton = document.getElementById('copyButton');
+      output.textContent = '';
+      copyButton.style.display = 'none';
+      document.getElementById('baseCode').value = '';
+      document.getElementById('count').value = '';
+    }
+
+    function copyToClipboard() {
+      const output = document.getElementById('output');
+      const textArea = document.createElement('textarea');
+      textArea.value = output.textContent;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      const copyButton = document.getElementById('copyButton');
+      copyButton.textContent = 'Скопировано!';
+      copyButton.style.backgroundColor = '#27ae60';
+      setTimeout(() => {
+        copyButton.textContent = 'Копировать';
+        copyButton.style.backgroundColor = '#2ecc71';
+      }, 2000);
+    }
+
+    // Добавляем обработчики событий для удаления класса shake
+    document.getElementById('baseCode').addEventListener('input', function() {
+      this.classList.remove('shake');
+    });
+
+    document.getElementById('count').addEventListener('input', function() {
+      this.classList.remove('shake');
+    });
+  </script>
+</body></html>
